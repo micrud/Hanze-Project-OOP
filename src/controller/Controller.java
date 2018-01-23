@@ -5,37 +5,32 @@ import view.*;
 
 import java.awt.*;
 
-public class Controller extends AbstractController implements Runnable
-{
+public class Controller extends AbstractController implements Runnable {
     private Boolean run;
 
     private int tickPause = 100;
 
-    public Controller(Model model, View view)
-    {
+    public Controller(Model model, View view) {
         super(model, view);
     }
 
-    // Why am I broken?!?
-    public void manualTick(int ticks)
-    {
-        for(int i = 0; i < ticks; i++)
-        {
+    // Why do i not remove cars?
+    public void manualTick(int ticks) {
+        for (int i = 0; i < ticks; i++) {
             model.tick();
+            model.tickCar();
             updateView();
             model.tock();
         }
     }
 
-    public Color getCarColor(int floor, int row, int place)
-    {
+    public Color getCarColor(int floor, int row, int place) {
         Location location = new Location(floor, row, place);
         Car car = model.getCarAt(location);
         return car == null ? Color.white : car.getColor();
     }
 
-    private void updateView()
-    {
+    private void updateView() {
         int floors = model.getNumberOfFloors();
         int rows = model.getNumberOfRows();
         int places = model.getNumberOfPlaces();
@@ -46,36 +41,30 @@ public class Controller extends AbstractController implements Runnable
 
     // Runnable
 
-    public void start()
-    {
+    public void start() {
         new Thread(this).start();
     }
 
-    public void stop()
-    {
+    public void stop() {
         run = false;
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         run = true;
-        while (run)
-        {
+        while (run) {
             model.tick();
             model.tickCar();
             updateView();
 
-            try
-            {
+            try {
                 Thread.sleep(tickPause);
-            }
-            catch (InterruptedException e)
-            {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
             model.tock();
         }
     }
+
 }
