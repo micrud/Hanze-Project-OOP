@@ -22,6 +22,7 @@ public class Main
 
         view.setController(controller);
         view.startView();
+        controller.start();
 
 //        screen = new JFrame("Hello world!");
 //        screen.setSize(450, 285);
