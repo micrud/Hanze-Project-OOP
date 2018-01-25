@@ -22,9 +22,10 @@ public class Controller extends AbstractController implements Runnable
         for(int i = 0; i < ticks; i++)
         {
             model.tick();
-            updateView();
+            model.tickCar();
             model.tock();
         }
+        updateView();
     }
 
     public Color getCarColor(int floor, int row, int place)
@@ -32,6 +33,11 @@ public class Controller extends AbstractController implements Runnable
         Location location = new Location(floor, row, place);
         Car car = model.getCarAt(location);
         return car == null ? Color.white : car.getColor();
+    }
+
+    public void setTickPause(int ticks)
+    {
+        tickPause = ticks;
     }
 
     private void updateView()

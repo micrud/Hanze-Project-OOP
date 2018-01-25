@@ -23,6 +23,8 @@ public class Main
         view.setController(controller);
         view.startView();
 
+        controller.manualTick(0);
+
 //        screen = new JFrame("Hello world!");
 //        screen.setSize(450, 285);
 //        screen.setResizable(true);

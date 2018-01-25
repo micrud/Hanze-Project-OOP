@@ -6,13 +6,13 @@ public class Model extends AbstractModel
 {
     private static final String AD_HOC = "1";
     private static final String PASS = "2";
-    int weekDayArrivals = 100;    // average number of arriving cars per hour
-    int weekendArrivals = 200;    // average number of arriving cars per hour
-    int weekDayPassArrivals = 50; // average number of arriving cars per hour
-    int weekendPassArrivals = 5;  // average number of arriving cars per hour
-    int enterSpeed = 3;           // number of cars that can enter per minute
-    int paymentSpeed = 7;         // number of cars that can pay per minute
-    int exitSpeed = 5;            // number of cars that can leave per minute
+    private int weekDayArrivals = 100;    // average number of arriving cars per hour
+    private int weekendArrivals = 200;    // average number of arriving cars per hour
+    private int weekDayPassArrivals = 50; // average number of arriving cars per hour
+    private int weekendPassArrivals = 5;  // average number of arriving cars per hour
+    private int enterSpeed = 3;           // number of cars that can enter per minute
+    private int paymentSpeed = 7;         // number of cars that can pay per minute
+    private int exitSpeed = 5;            // number of cars that can leave per minute
     private boolean run;
     private int numberOfFloors;
     private int numberOfRows;
@@ -34,9 +34,9 @@ public class Model extends AbstractModel
         paymentCarQueue = new CarQueue();
         exitCarQueue = new CarQueue();
 
-        setNumberOfFloors(3);
-        setNumberOfRows(6);
-        setNumberOfPlaces(30);
+        setNumberOfFloors(4);
+        setNumberOfRows(7);
+        setNumberOfPlaces(35);
 
         numberOfOpenSpots = numberOfFloors * numberOfRows * numberOfPlaces;
 
@@ -214,7 +214,7 @@ public class Model extends AbstractModel
         }
     }
 
-    public Car removeCarAt(Location location)
+    private Car removeCarAt(Location location)
     {
         if (!locationIsValid(location))
         {
@@ -256,7 +256,7 @@ public class Model extends AbstractModel
         return numberOfPlaces;
     }
 
-    public int getNumberOfOpenSpots()
+    private int getNumberOfOpenSpots()
     {
         return numberOfOpenSpots;
     }
@@ -270,7 +270,7 @@ public class Model extends AbstractModel
         return cars[location.getFloor()][location.getRow()][location.getPlace()];
     }
 
-    public Location getFirstFreeLocation()
+    private Location getFirstFreeLocation()
     {
         for (int floor = 0; floor < getNumberOfFloors(); floor++)
         {
@@ -289,7 +289,7 @@ public class Model extends AbstractModel
         return null;
     }
 
-    public Car getFirstLeavingCar()
+    private Car getFirstLeavingCar()
     {
         for (int floor = 0; floor < getNumberOfFloors(); floor++)
         {
@@ -311,22 +311,22 @@ public class Model extends AbstractModel
 
     // Setters
 
-    public int setNumberOfFloors(int floors)
+    private int setNumberOfFloors(int floors)
     {
         return numberOfFloors = floors;
     }
 
-    public int setNumberOfRows(int rows)
+    private int setNumberOfRows(int rows)
     {
         return numberOfRows = rows;
     }
 
-    public int setNumberOfPlaces(int places)
+    private int setNumberOfPlaces(int places)
     {
         return numberOfPlaces = places;
     }
 
-    public boolean setCarAt(Location location, Car car)
+    private boolean setCarAt(Location location, Car car)
     {
         if (!locationIsValid(location))
         {

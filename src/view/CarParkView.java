@@ -30,7 +30,7 @@ public class CarParkView extends JPanel
      */
     public Dimension getPreferredSize()
     {
-        return new Dimension(800, 500);
+        return new Dimension(800, 450);
     }
 
     /**
@@ -55,50 +55,9 @@ public class CarParkView extends JPanel
         }
     }
 
-//    public void updateViewBackup(int floors, int rows, int places)
-//    {
-//        int x = 0;
-//        int y = 0;
-//        int z = 0;
-//
-//        // Create a new car park image if the size has changed.
-//        if (!size.equals(getSize()))
-//        {
-//            size = getSize();
-//            carParkImage = createImage(size.width, size.height);
-//        }
-//
-//        Graphics graphics = carParkImage.getGraphics();
-//
-//        while (x < floors)
-//        {
-//            while (y < rows)
-//            {
-//                while (z < places)
-//                {
-//                    Color color = controller.getCarColor(x, y, z);
-//                    drawPlace(graphics, x, y, z, color);
-//                    z++;
-//                }
-//                z = 0;
-//                y++;
-//            }
-//            z = 0;
-//            y = 0;
-//            x++;
-//        }
-//
-//        repaint();
-//    }
-
     public void updateView(int floors, int rows, int places)
     {
         int x = 0;
-        int y = 0;
-        int z = 0;
-
-        // Total amount of rows that need to be displayed (calculated by multiplying rows times floors)
-        int totalRows = floors * rows;
 
         // Create a new car park image if the size has changed.
         if (!size.equals(getSize()))
@@ -111,15 +70,20 @@ public class CarParkView extends JPanel
 
         size = getSize();
 
-        int border = 40;
+        // Set the size of the border around separate floors
+        int border = 20;
         int spacer = (border / 2);
+
 
         int canvasY = size.height - (border * 2);
         int rowHeight = canvasY / places;
 
         int totalCanvasX = size.width - ((border * 2) + (border * (floors - 1)));
         int canvasX = totalCanvasX / floors;
-        int rowWidth = (canvasX - ((rows / 2) - 1) * spacer) / rows;
+
+        int moduloRows = (rows % 2 == 1) ? rows + 1 : rows;
+
+        int rowWidth = (canvasX - ((moduloRows / 2) - 1) * spacer) / rows;
 
         testX = rowWidth;
         testY = rowHeight;
@@ -197,10 +161,10 @@ public class CarParkView extends JPanel
     {
         graphics.setColor(color);
         graphics.fillRect(
-                (floor == 1) ? x : (floor == 2) ? x + testCanvasX : x + (testCanvasX * 2),
+                //(floor == 1) ? x : (floor == 2) ? x + testCanvasX : x + (testCanvasX * 2),
+                (floor == 1) ? x : x + (testCanvasX * (floor - 1)),
                 y,
                 testX - 2,
                 testY - 2);
     }
 }
-
