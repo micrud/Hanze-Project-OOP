@@ -16,6 +16,9 @@ public class CarParkView extends JPanel
     private int testY = 10;
     private int testCanvasX = 0;
 
+    private int[] rowSizeX;
+    private int[] rowSizeY;
+
     /**
      * Constructor for objects of class CarPark
      */
@@ -55,19 +58,8 @@ public class CarParkView extends JPanel
         }
     }
 
-    public void updateView(int floors, int rows, int places)
+    public void calculateGraphics(int floors, int rows, int places)
     {
-        int x = 0;
-
-        // Create a new car park image if the size has changed.
-        if (!size.equals(getSize()))
-        {
-            size = getSize();
-            carParkImage = createImage(size.width, size.height);
-        }
-
-        Graphics graphics = carParkImage.getGraphics();
-
         size = getSize();
 
         // Set the size of the border around separate floors
@@ -95,8 +87,8 @@ public class CarParkView extends JPanel
         int rowX = border - rowWidth;
         int rowY = border - rowHeight;
 
-        int[] rowSizeX = new int[rows];
-        int[] rowSizeY = new int[places];
+        rowSizeX = new int[rows];
+        rowSizeY = new int[places];
 
         for (int r = 0; r < rows; r++)
         {
@@ -116,16 +108,27 @@ public class CarParkView extends JPanel
             rowY = rowY + rowHeight;
             rowSizeY[p] = rowY;
         }
+    }
 
-//        for (int rowTT = 0; rowTT < rows; rowTT++)
-//        {
-//            for (int placeTT = 0; placeTT < places; placeTT++)
-//            {
-//                Color color = controller.getCarColor(x, rowTT, placeTT);
-//                drawPlace(graphics, rowSizeX[rowTT], rowSizeY[placeTT], color);
-//
-//            }
-//        }
+    public void updateView(int floors, int rows, int places)
+    {
+        int x = 0;
+
+        size = getSize();
+        carParkImage = createImage(size.width, size.height);
+        
+        if ((rowSizeX == null || rowSizeY == null) || (!(rowSizeX.length == rows) || !(rowSizeY.length == places))) {calculateGraphics(floors, rows, places);}
+
+        // Create a new car park image if the size has changed.
+        if (!size.equals(getSize()))
+        {
+            size = getSize();
+            carParkImage = createImage(size.width, size.height);
+            calculateGraphics(floors, rows, places);
+        }
+
+        Graphics graphics = carParkImage.getGraphics();
+
 
         for (int floor = 1; floor <= floors; floor++)
         {

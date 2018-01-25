@@ -11,12 +11,16 @@ public class Controller extends AbstractController implements Runnable
 
     private int tickPause = 100;
 
+    /**
+     * Constructor voor the Controller
+     * @param model Needed for the AbstractController
+     * @param view Needed for the AbstractController
+     */
     public Controller(Model model, View view)
     {
         super(model, view);
     }
 
-    // Why am I broken?!?
     public void manualTick(int ticks)
     {
         for(int i = 0; i < ticks; i++)

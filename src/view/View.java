@@ -22,7 +22,7 @@ public class View extends AbstractView
     private JButton day = new JButton("+1 Day");
 
     // Create the JSlider
-    private JSlider slider = new JSlider(JSlider.VERTICAL, 1, 1001, 100);
+    private JSlider slider = new JSlider(JSlider.VERTICAL, 11, 1001, 100);
 
     public View()
     {

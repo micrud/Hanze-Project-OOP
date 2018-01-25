@@ -11,6 +11,11 @@ public abstract class AbstractController extends JPanel
     protected Model model;
     protected View view;
 
+    /**
+     * Constructor for AbstractController
+     * @param model The model with all logic
+     * @param view The view to display
+     */
     public AbstractController(Model model, View view)
     {
         this.model = model;
