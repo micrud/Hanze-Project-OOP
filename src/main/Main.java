@@ -22,6 +22,7 @@ public class Main
 
         view.setController(controller);
         view.startView();
+        controller.start();
 
         controller.manualTick(0);
 
