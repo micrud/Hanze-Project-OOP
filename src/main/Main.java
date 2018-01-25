@@ -1,43 +1,37 @@
 package main;
 
-import model.*;
-import view.*;
-import controller.*;
+import controller.Controller;
+import model.Model;
+import view.View;
 
-import javax.swing.*;
-
+/**
+ * Main class to boot the whole application
+ */
 public class Main
 {
-    private Model model;
-    private View view;
-    private Controller controller;
-
-//    private JFrame screen;
-
+    /**
+     * Main method to boot the whole application
+     */
     public Main()
     {
-        model = new Model();
-        view = new View();
-        controller = new Controller(model, view);
+        Model model = new Model();
+        View view = new View();
+        Controller controller = new Controller(model, view);
 
         view.setController(controller);
         view.startView();
-        controller.start();
 
         controller.manualTick(0);
-
-//        screen = new JFrame("Hello world!");
-//        screen.setSize(450, 285);
-//        screen.setResizable(true);
-//        screen.setLayout(null);
-//
-//        screen.getContentPane().add(view);
-//
-//        screen.pack();
-//
-//        screen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//        screen.setVisible(true);
-//
-        // controller.start();
+        //////
+        // TO-DO: If time allows it it's probably better to refactor to:
+        //////
+        // model = new Model();
+        // controller = new Controller(model);
+        // view = new View(controller);
+        //
+        // controller.setView(view)
+        //////
+        // this way we can initiate all views from the Views constructor.
+        //////
     }
 }

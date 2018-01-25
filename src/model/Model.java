@@ -13,7 +13,6 @@ public class Model extends AbstractModel
     private int enterSpeed = 3;           // number of cars that can enter per minute
     private int paymentSpeed = 7;         // number of cars that can pay per minute
     private int exitSpeed = 5;            // number of cars that can leave per minute
-    private boolean run;
     private int numberOfFloors;
     private int numberOfRows;
     private int numberOfPlaces;
