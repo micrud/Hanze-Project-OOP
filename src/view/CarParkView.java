@@ -1,6 +1,6 @@
 package view;
 
-import controller.*;
+import controller.Controller;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,15 +12,15 @@ public class CarParkView extends JPanel
     private Dimension size;
     private Image carParkImage;
 
-    private int testX = 20;
-    private int testY = 10;
-    private int testCanvasX = 0;
+    private int parkingPlaceWidth = 20;
+    private int parkingPlaceHeight = 10;
+    private int borderedCanvasPerFloorWidth = 0;
 
-    private int[] rowSizeX;
-    private int[] rowSizeY;
+    private int[] anchorX;
+    private int[] anchorY;
 
     /**
-     * Constructor for objects of class CarPark
+     * Constructor for objects of class CarParkView
      */
     public CarParkView(Controller controller)
     {
@@ -58,37 +58,51 @@ public class CarParkView extends JPanel
         }
     }
 
+    /**
+     * Calculates the width and the height of each parking spot that has to be displayed
+     * and saves them in a Array.
+     *
+     * @param floors The amount of floors to be displayed
+     * @param rows   The amount of rows on each floor
+     * @param places The amount of places in a row
+     */
     public void calculateGraphics(int floors, int rows, int places)
     {
+        // Create a new car park image if the size has changed.
+        if (!size.equals(getSize()))
+        {
+            size = getSize();
+            carParkImage = createImage(size.width, size.height);
+            calculateGraphics(floors, rows, places);
+        }
+
         size = getSize();
 
-        // Set the size of the border around separate floors
+        // Set the size of the border around the entire parking lot
         int border = 20;
         int spacer = (border / 2);
 
-
-        int canvasY = size.height - (border * 2);
-        int rowHeight = canvasY / places;
-
-        int totalCanvasX = size.width - ((border * 2) + (border * (floors - 1)));
-        int canvasX = totalCanvasX / floors;
-
+        // Calculate the width of a single parking spot
+        int canvasWidth = size.width - ((border * 2) + (border * (floors - 1)));
+        int canvasPerFloorWidth = canvasWidth / floors;
         int moduloRows = (rows % 2 == 1) ? rows + 1 : rows;
+        int rowWidth = (canvasPerFloorWidth - ((moduloRows / 2) - 1) * spacer) / rows;
 
-        int rowWidth = (canvasX - ((moduloRows / 2) - 1) * spacer) / rows;
+        // Calculate the height of a single parking spot
+        int canvasHeight = size.height - (border * 2);
+        int rowHeight = canvasHeight / places;
 
-        testX = rowWidth;
-        testY = rowHeight;
+        parkingPlaceWidth = rowWidth;
+        parkingPlaceHeight = rowHeight;
 
-        testCanvasX = canvasX + border;
+        borderedCanvasPerFloorWidth = canvasPerFloorWidth + border;
+
+        anchorX = new int[rows];
+        anchorY = new int[places];
 
         int counter = 0;
-
         int rowX = border - rowWidth;
         int rowY = border - rowHeight;
-
-        rowSizeX = new int[rows];
-        rowSizeY = new int[places];
 
         for (int r = 0; r < rows; r++)
         {
@@ -99,75 +113,65 @@ public class CarParkView extends JPanel
 
             }
             rowX = rowX + rowWidth;
-            rowSizeX[r] = rowX;
+            anchorX[r] = rowX;
             counter++;
         }
 
         for (int p = 0; p < places; p++)
         {
             rowY = rowY + rowHeight;
-            rowSizeY[p] = rowY;
+            anchorY[p] = rowY;
         }
     }
 
+    /**
+     * Updates CarParkView re-rendering the entire parkinglot
+     *
+     * @param floors The amount of floors to be displayed
+     * @param rows   The amount of rows on each floor
+     * @param places The amount of places in a row
+     */
     public void updateView(int floors, int rows, int places)
     {
-        int x = 0;
-
-        size = getSize();
-        carParkImage = createImage(size.width, size.height);
-        
-        if ((rowSizeX == null || rowSizeY == null) || (!(rowSizeX.length == rows) || !(rowSizeY.length == places))) {calculateGraphics(floors, rows, places);}
-
-        // Create a new car park image if the size has changed.
-        if (!size.equals(getSize()))
+        if ((anchorX == null || anchorY == null) || (!(anchorX.length == rows) || !(anchorY.length == places)))
         {
-            size = getSize();
-            carParkImage = createImage(size.width, size.height);
             calculateGraphics(floors, rows, places);
         }
 
         Graphics graphics = carParkImage.getGraphics();
 
-
-        for (int floor = 1; floor <= floors; floor++)
+        for (int floor = 0; floor < floors; floor++)
         {
-            for (int rowTT = 0; rowTT < rows; rowTT++)
+            for (int row = 0; row < rows; row++)
             {
-                for (int placeTT = 0; placeTT < places; placeTT++)
+                for (int place = 0; place < places; place++)
                 {
-                    Color color = controller.getCarColor(x, rowTT, placeTT);
-                    drawPlace(graphics, rowSizeX[rowTT], rowSizeY[placeTT], color, floor);
+                    Color color = controller.getCarColor(floor, row, place);
+                    drawPlace(graphics, anchorX[row], anchorY[place], color, floor);
 
                 }
             }
-            x++;
         }
 
         repaint();
     }
 
     /**
-     * Paint a place on this car park view in a given color.
+     * Draw a parking place in the specified colour on x- and y-axis
+     *
+     * @param graphics The background to draw on
+     * @param x        The x-axis of the top-left corner of a specific parking place
+     * @param y        The y-axis of the top-left corner of a specific parking place
+     * @param colour   The colour the parking place needs to be drawn in
+     * @param floor    The floor on which the parking place should be drawn
      */
-    private void drawPlaceBackup(Graphics graphics, int floor, int row, int place, Color color)
+    private void drawPlace(Graphics graphics, int x, int y, Color colour, int floor)
     {
-        graphics.setColor(color);
+        graphics.setColor(colour);
         graphics.fillRect(
-                floor * 260 + (1 + (int) Math.floor(row * 0.5)) * 75 + (row % 2) * 20,
-                60 + place * 10,
-                20 - 1,
-                10 - 1); // TODO use dynamic size or constants
-    }
-
-    private void drawPlace(Graphics graphics, int x, int y, Color color, int floor)
-    {
-        graphics.setColor(color);
-        graphics.fillRect(
-                //(floor == 1) ? x : (floor == 2) ? x + testCanvasX : x + (testCanvasX * 2),
-                (floor == 1) ? x : x + (testCanvasX * (floor - 1)),
+                (floor == 0) ? x : x + (borderedCanvasPerFloorWidth * floor),
                 y,
-                testX - 2,
-                testY - 2);
+                parkingPlaceWidth - 2,
+                parkingPlaceHeight - 2);
     }
 }

@@ -25,7 +25,7 @@ public class SliderView extends JPanel
         // Setting up the JSlider
         // Hashtable is needed te add labels to the JSlider
         Hashtable labelTable = new Hashtable();
-        labelTable.put(1, new JLabel("Fast"));
+        labelTable.put(11, new JLabel("Fast"));
         labelTable.put(1000, new JLabel("Slow"));
 
         slider.setMajorTickSpacing(100);

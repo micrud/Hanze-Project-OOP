@@ -31,7 +31,7 @@ public class View extends AbstractView
         // Create a Container
         Container contentPane = getContentPane();
         // Add all Views
-        contentPane.add(carParkView, BorderLayout.WEST);
+        contentPane.add(carParkView, BorderLayout.CENTER);
         contentPane.add(buttonView, BorderLayout.SOUTH);
         contentPane.add(sliderView, BorderLayout.EAST);
         // Finalize

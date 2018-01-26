@@ -33,9 +33,9 @@ public class Model extends AbstractModel
         paymentCarQueue = new CarQueue();
         exitCarQueue = new CarQueue();
 
-        setNumberOfFloors(4);
-        setNumberOfRows(7);
-        setNumberOfPlaces(35);
+        setNumberOfFloors(3);
+        setNumberOfRows(6);
+        setNumberOfPlaces(30);
 
         numberOfOpenSpots = numberOfFloors * numberOfRows * numberOfPlaces;
 
