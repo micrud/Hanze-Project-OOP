@@ -2,9 +2,10 @@ package view;
 
 import controller.Controller;
 
+import javax.swing.*;
 import java.awt.*;
 
-public class View extends AbstractView
+public class View extends JFrame
 {
     private Controller controller;
 
@@ -45,6 +46,11 @@ public class View extends AbstractView
     public void setController(Controller controller)
     {
         this.controller = controller;
+    }
+
+    public void updateView()
+    {
+        repaint();
     }
 
     public void updateView(int floors, int rows, int places)

@@ -2,10 +2,11 @@ package view;
 
 import controller.Controller;
 
-import javax.swing.*;
 import java.awt.*;
 
-public class CarParkView extends JPanel
+import static java.lang.Math.round;
+
+public class CarParkView extends AbstractView
 {
     private Controller controller;
 
@@ -86,11 +87,11 @@ public class CarParkView extends JPanel
         int canvasWidth = size.width - ((border * 2) + (border * (floors - 1)));
         int canvasPerFloorWidth = canvasWidth / floors;
         int moduloRows = (rows % 2 == 1) ? rows + 1 : rows;
-        int rowWidth = (canvasPerFloorWidth - ((moduloRows / 2) - 1) * spacer) / rows;
+        int rowWidth = (int) round((canvasPerFloorWidth - ((moduloRows / 2) - 1) * spacer) / (rows * 1.0));
 
         // Calculate the height of a single parking spot
         int canvasHeight = size.height - (border * 2);
-        int rowHeight = canvasHeight / places;
+        int rowHeight = (int) round(canvasHeight / (places * 1.0));
 
         parkingPlaceWidth = rowWidth;
         parkingPlaceHeight = rowHeight;
@@ -104,7 +105,7 @@ public class CarParkView extends JPanel
         int rowX = border - rowWidth;
         int rowY = border - rowHeight;
 
-        for (int r = 0; r < rows; r++)
+        for (int row = 0; row < rows; row++)
         {
             if (counter > 1)
             {
@@ -113,14 +114,14 @@ public class CarParkView extends JPanel
 
             }
             rowX = rowX + rowWidth;
-            anchorX[r] = rowX;
+            anchorX[row] = rowX;
             counter++;
         }
 
-        for (int p = 0; p < places; p++)
+        for (int place = 0; place < places; place++)
         {
             rowY = rowY + rowHeight;
-            anchorY[p] = rowY;
+            anchorY[place] = rowY;
         }
     }
 

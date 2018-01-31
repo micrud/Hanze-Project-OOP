@@ -5,7 +5,7 @@ import controller.Controller;
 import javax.swing.*;
 import java.util.Hashtable;
 
-public class SliderView extends JPanel
+public class SliderView extends AbstractView
 {
     private Controller controller;
 

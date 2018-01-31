@@ -5,7 +5,7 @@ import controller.Controller;
 import javax.swing.*;
 import java.awt.*;
 
-public class ButtonView extends JPanel
+public class ButtonView extends AbstractView
 {
     private Controller controller;
 

@@ -1,9 +1,10 @@
 package view;
 
-import javax.swing.*;
-import controller.*;
+import controller.Controller;
 
-public abstract class AbstractView extends JFrame
+import javax.swing.*;
+
+public abstract class AbstractView extends JPanel
 {
     protected Controller controller;
 
@@ -17,7 +18,8 @@ public abstract class AbstractView extends JFrame
         this.controller = controller;
     }
 
-    public void updateView() {
+    public void updateView()
+    {
         repaint();
     }
 }

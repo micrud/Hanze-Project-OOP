@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.*;
 import java.util.Random;
 
 public class Model extends AbstractModel
@@ -26,6 +27,9 @@ public class Model extends AbstractModel
     private int hour = 0;
     private int minute = 0;
 
+    private int reservations = 120;
+    private boolean reservationBoolean = false;
+
     public Model()
     {
         entranceCarQueue = new CarQueue();
@@ -39,7 +43,10 @@ public class Model extends AbstractModel
 
         numberOfOpenSpots = numberOfFloors * numberOfRows * numberOfPlaces;
 
+
         cars = new Car[numberOfFloors][numberOfRows][numberOfPlaces];
+
+        //private
     }
 
     public void tick()
@@ -50,6 +57,7 @@ public class Model extends AbstractModel
 
     public void tock()
     {
+        handleYellow();
         handleEntrance();
     }
 
@@ -74,10 +82,37 @@ public class Model extends AbstractModel
 
     }
 
+    private String getTimeString()
+    {
+        String minutes;
+        String hours;
+        if (minute < 10)
+        {
+            minutes = "0" + minute;
+        } else
+        {
+            minutes = "" + minute;
+        }
+        if (hour < 10)
+        {
+            hours = "0" + hour;
+        } else
+        {
+            hours = "" + hour;
+        }
+        return hours + ":" + minutes;
+    }
+
+    private String getDayString()
+    {
+        String[] week = new String[]{"Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"};
+        return week[day];
+    }
+
     private void handleEntrance()
     {
         carsArriving();
-        carsEntering(entrancePassQueue);
+        passEntering(entrancePassQueue);
         carsEntering(entranceCarQueue);
     }
 
@@ -86,6 +121,22 @@ public class Model extends AbstractModel
         carsReadyToLeave();
         carsPaying();
         carsLeaving();
+    }
+
+    private void handleYellow()
+    {
+        if (reservationBoolean == false)
+        {
+            int i = 0;
+            while (i < reservations)
+            {
+                Car car = new Yellow();
+                Location freeLocation = getLastFreeLocation();
+                setCarAt(freeLocation, car);
+                i++;
+            }
+            reservationBoolean = true;
+        }
     }
 
     private void carsArriving()
@@ -111,6 +162,41 @@ public class Model extends AbstractModel
         }
     }
 
+    private void passEntering(CarQueue queue)
+    {
+        int i = 0;
+        // Remove car from the front of the queue and assign to a parking space.
+        while (queue.carsInQueue() > 0 &&
+                getNumberOfOpenSpots() > 0 &&
+                i < enterSpeed)
+        {
+            Car car = queue.removeCar();
+            Location freeLocation = getFirstFreePassLocation();
+            removeCarAt(freeLocation);
+            setCarAt(freeLocation, car);
+            i++;
+        }
+    }
+
+    private Location getFirstFreePassLocation()
+    {
+        for (int floor = 0; floor < getNumberOfFloors(); floor++)
+        {
+            for (int row = 0; row < getNumberOfRows(); row++)
+            {
+                for (int place = 0; place < getNumberOfPlaces(); place++)
+                {
+                    Location location = new Location(floor, row, place);
+                    if (getCarAt(location) != null && getCarAt(location).getColor() == Color.yellow)
+                    {
+                        return location;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     private void carsReadyToLeave()
     {
         // Add leaving cars to the payment queue.
@@ -123,7 +209,7 @@ public class Model extends AbstractModel
                 paymentCarQueue.addCar(car);
             } else
             {
-                carLeavesSpot(car);
+                passLeavesSpot(car);
             }
             car = getFirstLeavingCar();
         }
@@ -191,6 +277,15 @@ public class Model extends AbstractModel
     private void carLeavesSpot(Car car)
     {
         removeCarAt(car.getLocation());
+        exitCarQueue.addCar(car);
+    }
+
+    private void passLeavesSpot(Car car)
+    {
+        Car newYellow = new Yellow();
+        Location test = car.getLocation();
+        removeCarAt(test);
+        setCarAt(test, newYellow);
         exitCarQueue.addCar(car);
     }
 
@@ -276,6 +371,25 @@ public class Model extends AbstractModel
             for (int row = 0; row < getNumberOfRows(); row++)
             {
                 for (int place = 0; place < getNumberOfPlaces(); place++)
+                {
+                    Location location = new Location(floor, row, place);
+                    if (getCarAt(location) == null)
+                    {
+                        return location;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private Location getLastFreeLocation()
+    {
+        for (int floor = getNumberOfFloors() - 1; floor >= 0; floor--)
+        {
+            for (int row = getNumberOfRows() - 1; row >= 0; row--)
+            {
+                for (int place = getNumberOfPlaces() - 1; place >= 0; place--)
                 {
                     Location location = new Location(floor, row, place);
                     if (getCarAt(location) == null)
